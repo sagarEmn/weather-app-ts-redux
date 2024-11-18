@@ -1,0 +1,6 @@
+#root {
+    height: 100%;
+    display: flex;
+    place-items: center;
+    place-content: center;
+}

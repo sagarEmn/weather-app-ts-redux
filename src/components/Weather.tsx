@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Weather.css";
 
 // import images
-import search_icon from "../assets/images/search.png";
+import search_icon from "../assets/icons/search.svg";
 import clear_icon from "../assets/images/clear.png";
 import cloud_icon from "../assets/images/cloud.png";
 import drizzle_icon from "../assets/images/drizzle.png";
@@ -108,20 +108,20 @@ export default function Weather() {
               name="city"
               placeholder="Search"
             />
-            <img src={search_icon} alt="search-icon" onClick={handleSearch} />
+            <img src={search_icon} alt="search-icon" onClick={handleSearch} className="search-icon" />
           </form>
         </section>
 
         {weatherData ? (
-          <>
-            <section className="weather-details">
+          <section className="weather-details">
+            <section className="weather-main-details">
               <img src={weatherData.icon} alt="" className="weather-icon" />
               <p className="temperature">{weatherData.temperature} °C</p>
               <p className="location">{weatherData.location}</p>
             </section>
             <section className="weather-data">
               <section className="weather-data-col">
-                <img src={humidity_icon} alt="" />
+                <img src={humidity_icon} alt="" className="weather-icon" />
                 <div>
                   <p>{weatherData.humidity}</p>
                   <span>Humidity</span>
@@ -129,14 +129,14 @@ export default function Weather() {
               </section>
 
               <section className="weather-data-col">
-                <img src={wind_icon} alt="" />
+                <img src={wind_icon} alt="" className="weather-icon" />
                 <div>
                   <p>{weatherData.windSpeed} Km/h</p>
                   <span>Wind Speed</span>
                 </div>
               </section>
             </section>
-          </>
+          </section>
         ) : (
           <></>
         )}
