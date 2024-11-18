@@ -11,7 +11,7 @@ import snow_icon from "../assets/images/snow.png";
 import wind_icon from "../assets/images/wind.png";
 import humidity_icon from "../assets/images/humidity.png";
 
-function Weather() {
+export default function Weather() {
     const inputRef = useRef();
     const [weatherData, setWeatherData] = useState(false);
 
@@ -31,5 +31,44 @@ function Weather() {
         "13n": snow_icon,
     };
 
-    
+    // fetch api response
+    const search = async (city) => {
+        if (city === "") {
+            alert("Please enter a city name");
+            return;
+        }
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${
+                import.meta.env.VITE_APP_ID
+              }`;
+
+              const response = await fetch(url);
+              const data = await response.json();
+
+              if (!response.ok) {
+                alert(data.message);
+                return;
+              }
+
+              console.log(data);
+
+              const icon = allIcons[data.weather[0].icon] || clear_icon;
+
+              setWeatherData({
+                humidity: data.main.humidity,
+                windSpeed: data.wind.speed,
+                temperatuer: Math.floor(data.main.temp),
+                location: data.name,
+                icon: icon,
+              });
+        } catch (error) {
+            setWeatherData(false);
+            console.log("Error in fetching weather data");
+        }
+    };
+
+    useEffect(() => {
+        search("Banepa");
+    }, []);
+
 }
