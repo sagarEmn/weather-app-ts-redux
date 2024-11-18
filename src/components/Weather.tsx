@@ -86,11 +86,11 @@ export default function Weather() {
   const handleSearch = () => {
     const searchValue = inputRef.current?.value.trim();
     if (searchValue) {
-        search(searchValue)
+      search(searchValue);
     } else {
-        alert ("Please enter a city name!");
+      alert("Please enter a city name!");
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,16 +108,17 @@ export default function Weather() {
               name="city"
               placeholder="Search"
             />
-            <img
-              src={search_icon}
-              alt="search-icon"
-              onClick={handleSearch}
-            />
+            <img src={search_icon} alt="search-icon" onClick={handleSearch} />
           </form>
         </section>
 
         {weatherData ? (
           <>
+            <section className="weather-details">
+              <img src={weatherData.icon} alt="" className="weather-icon" />
+              <p className="temperature">{weatherData.temperature} °C</p>
+              <p className="location">{weatherData.location}</p>
+            </section>
             <section className="weather-data">
               <section className="weather-data-col">
                 <img src={humidity_icon} alt="" />
