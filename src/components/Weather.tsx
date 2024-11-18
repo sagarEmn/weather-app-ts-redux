@@ -11,11 +11,23 @@ import snow_icon from "../assets/images/snow.png";
 import wind_icon from "../assets/images/wind.png";
 import humidity_icon from "../assets/images/humidity.png";
 
-export default function Weather() {
-  const inputRef = useRef();
-  const [weatherData, setWeatherData] = useState(false);
+interface WeatherData {
+  humidity: number;
+  windSpeed: number;
+  temperature: number;
+  location: string;
+  icon: string;
+}
 
-  const allIcons = {
+type WeatherIcons = {
+  [key: string]: string;
+};
+
+export default function Weather() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [weatherData, setWeatherData] = useState<WeatherData | false>(false);
+
+  const allIcons: WeatherIcons = {
     "01d": clear_icon,
     "01n": clear_icon,
     "02d": cloud_icon,
@@ -32,7 +44,7 @@ export default function Weather() {
   };
 
   // fetch api response
-  const search = async (city) => {
+  const search = async (city: string) => {
     if (city === "") {
       alert("Please enter a city name");
       return;
@@ -57,7 +69,7 @@ export default function Weather() {
       setWeatherData({
         humidity: data.main.humidity,
         windSpeed: data.wind.speed,
-        temperatuer: Math.floor(data.main.temp),
+        temperature: Math.floor(data.main.temp),
         location: data.name,
         icon: icon,
       });
@@ -71,9 +83,18 @@ export default function Weather() {
     search("Banepa");
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSearch = () => {
+    const searchValue = inputRef.current?.value.trim();
+    if (searchValue) {
+        search(searchValue)
+    } else {
+        alert ("Please enter a city name!");
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    search(inputRef.current.value);
+    handleSearch();
   };
 
   return (
@@ -90,28 +111,34 @@ export default function Weather() {
             <img
               src={search_icon}
               alt="search-icon"
-              onClick={() => search(inputRef.current.value)}
+              onClick={handleSearch}
             />
           </form>
         </section>
 
-        <section className="weather-data">
-            <section className="weather-data-col">
+        {weatherData ? (
+          <>
+            <section className="weather-data">
+              <section className="weather-data-col">
                 <img src={humidity_icon} alt="" />
                 <div>
-                    <p>{weatherData.humidity}</p>
-                    <span>Humidity</span>
+                  <p>{weatherData.humidity}</p>
+                  <span>Humidity</span>
                 </div>
-            </section>
+              </section>
 
-            <section className="weather-data-col">
+              <section className="weather-data-col">
                 <img src={wind_icon} alt="" />
                 <div>
-                    <p>{weatherData.windSpeed} Km/h</p>
-                    <span>Wind Speed</span>
+                  <p>{weatherData.windSpeed} Km/h</p>
+                  <span>Wind Speed</span>
                 </div>
+              </section>
             </section>
-        </section>
+          </>
+        ) : (
+          <></>
+        )}
       </main>
     </>
   );
