@@ -71,4 +71,29 @@ export default function Weather() {
         search("Banepa");
     }, []);
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        search(inputRef.current.value);
+    }
+
+    return(
+        <>
+        
+        
+            <main className="weather">
+                <section className="search-bar">
+                    <form onSubmit={handleSubmit} className="search-bar">
+                        <input ref={inputRef} type="text" name="city" placeholder="Search" />
+                        <img 
+                            src={search_icon}
+                            alt="search-icon"
+                            onClick={ () => search(inputRef.current.value)}
+                        />
+                    </form>
+                </section>
+
+
+            </main>
+        </>
+    )
 }
