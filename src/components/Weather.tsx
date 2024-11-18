@@ -12,88 +12,107 @@ import wind_icon from "../assets/images/wind.png";
 import humidity_icon from "../assets/images/humidity.png";
 
 export default function Weather() {
-    const inputRef = useRef();
-    const [weatherData, setWeatherData] = useState(false);
+  const inputRef = useRef();
+  const [weatherData, setWeatherData] = useState(false);
 
-    const allIcons = {
-        "01d": clear_icon,
-        "01n": clear_icon,
-        "02d": cloud_icon,
-        "02n": cloud_icon,
-        "03d": cloud_icon,
-        "03n": cloud_icon,
-        "04d": drizzle_icon,
-        "09d": rain_icon,
-        "09n": rain_icon,
-        "10d": rain_icon,
-        "10n": rain_icon,
-        "13d": snow_icon,
-        "13n": snow_icon,
-    };
+  const allIcons = {
+    "01d": clear_icon,
+    "01n": clear_icon,
+    "02d": cloud_icon,
+    "02n": cloud_icon,
+    "03d": cloud_icon,
+    "03n": cloud_icon,
+    "04d": drizzle_icon,
+    "09d": rain_icon,
+    "09n": rain_icon,
+    "10d": rain_icon,
+    "10n": rain_icon,
+    "13d": snow_icon,
+    "13n": snow_icon,
+  };
 
-    // fetch api response
-    const search = async (city) => {
-        if (city === "") {
-            alert("Please enter a city name");
-            return;
-        }
-        try {
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${
-                import.meta.env.VITE_APP_ID
-              }`;
-
-              const response = await fetch(url);
-              const data = await response.json();
-
-              if (!response.ok) {
-                alert(data.message);
-                return;
-              }
-
-              console.log(data);
-
-              const icon = allIcons[data.weather[0].icon] || clear_icon;
-
-              setWeatherData({
-                humidity: data.main.humidity,
-                windSpeed: data.wind.speed,
-                temperatuer: Math.floor(data.main.temp),
-                location: data.name,
-                icon: icon,
-              });
-        } catch (error) {
-            setWeatherData(false);
-            console.log("Error in fetching weather data");
-        }
-    };
-
-    useEffect(() => {
-        search("Banepa");
-    }, []);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        search(inputRef.current.value);
+  // fetch api response
+  const search = async (city) => {
+    if (city === "") {
+      alert("Please enter a city name");
+      return;
     }
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${
+        import.meta.env.VITE_APP_ID
+      }`;
 
-    return(
-        <>
-        
-        
-            <main className="weather">
-                <section className="search-bar">
-                    <form onSubmit={handleSubmit} className="search-bar">
-                        <input ref={inputRef} type="text" name="city" placeholder="Search" />
-                        <img 
-                            src={search_icon}
-                            alt="search-icon"
-                            onClick={ () => search(inputRef.current.value)}
-                        />
-                    </form>
-                </section>
+      const response = await fetch(url);
+      const data = await response.json();
 
+      if (!response.ok) {
+        alert(data.message);
+        return;
+      }
 
-            </main>
-        </>
-    )
+      console.log(data);
+
+      const icon = allIcons[data.weather[0].icon] || clear_icon;
+
+      setWeatherData({
+        humidity: data.main.humidity,
+        windSpeed: data.wind.speed,
+        temperatuer: Math.floor(data.main.temp),
+        location: data.name,
+        icon: icon,
+      });
+    } catch (error) {
+      setWeatherData(false);
+      console.log("Error in fetching weather data");
+    }
+  };
+
+  useEffect(() => {
+    search("Banepa");
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    search(inputRef.current.value);
+  };
+
+  return (
+    <>
+      <main className="weather">
+        <section>
+          <form onSubmit={handleSubmit} className="search-bar">
+            <input
+              ref={inputRef}
+              type="text"
+              name="city"
+              placeholder="Search"
+            />
+            <img
+              src={search_icon}
+              alt="search-icon"
+              onClick={() => search(inputRef.current.value)}
+            />
+          </form>
+        </section>
+
+        <section className="weather-data">
+            <section className="weather-data-col">
+                <img src={humidity_icon} alt="" />
+                <div>
+                    <p>{weatherData.humidity}</p>
+                    <span>Humidity</span>
+                </div>
+            </section>
+
+            <section className="weather-data-col">
+                <img src={wind_icon} alt="" />
+                <div>
+                    <p>{weatherData.windSpeed} Km/h</p>
+                    <span>Wind Speed</span>
+                </div>
+            </section>
+        </section>
+      </main>
+    </>
+  );
 }
